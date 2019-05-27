@@ -11,6 +11,9 @@ output:
 library(dplyr)
 library(stringr)
 library(tidyr)
+library(stargazer)
+library(xtable)
+library(data.table)
 setwd("C:/Users/Emma/Desktop/Enron")
 emails=read.csv("emails.csv",nrows=1000, stringsAsFactors = F)
 ```
@@ -53,9 +56,52 @@ emails_split=data.frame(Messageid,Date,From,To,Subject,Mimeversion,Contentencodi
 
 ```
 
-Now the data is in a more human readable format.
+Now the data is in a more human readable format.Here is what the first row of data looks like:
 
 ```{r}
-emails_split[2,]
-
+data.table(emails_split[1,])
 ```
+
+But this isn't very easy to read, so let's create a new table with information such as date, from, to and message. 
+
+```{r}
+email_content=data.frame(emails_split$Date,emails_split$From,emails_split$To,emails_split$email_text.Body)
+names(email_content)=c("Date","From","To","Body")
+head(email_content)
+```
+Let's also tidy up the date timestamps so we do some analysis on these.  Firsly, we need to convert the Date column into actual date format in R:
+
+```{r}
+str(email_content) #not in date format yet, so need to convert this
+library(lubridate)
+
+email_content=email_content%>%
+  mutate(Date_formatted=as.POSIXct(Date,format="%a, %d %b %Y %H:%M:%S %z"))
+
+attributes(email_content$Date_formatted)$tzone = "America/Los_Angeles"
+
+email_content=email_content%>%
+  mutate(year=year(Date_formatted),
+         month=month(Date_formatted,label=T),mday=mday(Date_formatted),
+         day=wday(Date_formatted,label=T),hour=hour(Date_formatted), 
+         minute=minute(Date_formatted))
+
+ 
+```
+
+Now we can extract all the individual elements to see things like day, time, month, year etc for doing some aggregations later.
+
+
+
+
+#### Who sent the most emails and to whom?
+
+
+
+#### Most common times emails were sent
+
+
+#### Topic modelling 
+
+
+#### Word cloud from emails
