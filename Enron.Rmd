@@ -1,0 +1,61 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+### Importing the libraries, data & setting WD
+
+```{r}
+library(dplyr)
+library(stringr)
+library(tidyr)
+setwd("C:/Users/Emma/Desktop/Enron")
+emails=read.csv("emails.csv",nrows=1000, stringsAsFactors = F)
+```
+```{r eval=T}
+#head(emails,1)
+emails[1,]
+```
+### Extracting the data 
+
+At the moment, the data is in an unstructured format.  The first thing that needs to be done, is to extract data from the different components of the email.
+
+#### Step 1:
+Split the data into the headings and body of the email:
+
+```{r}
+#splitting the data by the strt of the email tag tag \n\n
+#splits data into message
+email_text=as.data.frame(str_split_fixed(emails$message, "\n\n", 2))
+names(email_text)=c("Headings", "Body")
+```
+
+#### Step 2:
+Split the Headings section into more sensible columns, for analysis purposes:
+```{r}
+Messageid=(str_sub(str_extract(email_text$Headings,"Message-ID:.*"),start=12))
+Date=(str_sub(str_extract(email_text$Headings,"Date:.*"),start=7))
+From=(str_sub(str_extract(email_text$Headings,"From:.*"),start=7))
+To=(str_sub(str_extract(email_text$Headings,"To:.*"),start=5))
+Subject=(str_sub(str_extract(email_text$Headings,"Subject:.*"),start=10))
+Mimeversion=(str_sub(str_extract(email_text$Headings,"Mime-Version:.*"),start=15))
+Contenttype=(str_sub(str_extract(email_text$Headings,"Content-Type:.*"),start=15))
+Contentencoding=(str_sub(str_extract(email_text$Headings,"Content-Transfer-Encoding:.*"),start=28))
+cc=(str_sub(str_extract(email_text$Headings,"X-cc:.*"),start=7))
+bcc=(str_sub(str_extract(email_text$Headings,"X-bcc:.*"),start=8))
+Folder=(str_sub(str_extract(email_text$Headings,"X-Folder:.*"),start=11))
+origin=(str_sub(str_extract(email_text$Headings,"X-Origin:.*"),start=11))
+filename=(str_sub(str_extract(email_text$Headings,"X-FileName:.*"),start=12))
+
+emails_split=data.frame(Messageid,Date,From,To,Subject,Mimeversion,Contentencoding,Contenttype,cc,bcc,Folder,origin, filename,email_text$Body,stringsAsFactors=FALSE)
+
+```
+
+Now the data is in a more human readable format.
+
+```{r}
+emails_split[2,]
+
+```
