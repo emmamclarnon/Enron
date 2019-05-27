@@ -137,7 +137,19 @@ $(document).ready(function () {
 ##     intersect, setdiff, setequal, union</code></pre>
 <pre class="r"><code>library(stringr)
 library(tidyr)
-setwd(&quot;C:/Users/Emma/Downloads/emails.csv&quot;)
+library(stargazer)</code></pre>
+<pre><code>## 
+## Please cite as:</code></pre>
+<pre><code>##  Hlavac, Marek (2018). stargazer: Well-Formatted Regression and Summary Statistics Tables.</code></pre>
+<pre><code>##  R package version 5.2.2. https://CRAN.R-project.org/package=stargazer</code></pre>
+<pre class="r"><code>library(xtable)
+library(data.table)</code></pre>
+<pre><code>## 
+## Attaching package: 'data.table'</code></pre>
+<pre><code>## The following objects are masked from 'package:dplyr':
+## 
+##     between, first, last</code></pre>
+<pre class="r"><code>setwd(&quot;C:/Users/Emma/Desktop/Enron&quot;)
 emails=read.csv(&quot;emails.csv&quot;,nrows=1000, stringsAsFactors = F)</code></pre>
 <pre class="r"><code>#head(emails,1)
 emails[1,]</code></pre>
@@ -176,13 +188,65 @@ origin=(str_sub(str_extract(email_text$Headings,&quot;X-Origin:.*&quot;),start=1
 filename=(str_sub(str_extract(email_text$Headings,&quot;X-FileName:.*&quot;),start=12))
 
 emails_split=data.frame(Messageid,Date,From,To,Subject,Mimeversion,Contentencoding,Contenttype,cc,bcc,Folder,origin, filename,email_text$Body,stringsAsFactors=FALSE)</code></pre>
-<p>Now the data is in a more human readable format.</p>
-<pre class="r"><code>emails_split[2,]</code></pre>
+<p>Now the data is in a more human readable format.Here is what the first row of data looks like:</p>
+<pre class="r"><code>data.table(emails_split[1,])</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Messageid"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Date"],"name":[2],"type":["chr"],"align":["left"]},{"label":["From"],"name":[3],"type":["chr"],"align":["left"]},{"label":["To"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Subject"],"name":[5],"type":["chr"],"align":["left"]},{"label":["Mimeversion"],"name":[6],"type":["chr"],"align":["left"]},{"label":["Contentencoding"],"name":[7],"type":["chr"],"align":["left"]},{"label":["Contenttype"],"name":[8],"type":["chr"],"align":["left"]},{"label":["cc"],"name":[9],"type":["chr"],"align":["left"]},{"label":["bcc"],"name":[10],"type":["chr"],"align":["left"]},{"label":["Folder"],"name":[11],"type":["chr"],"align":["left"]},{"label":["origin"],"name":[12],"type":["chr"],"align":["left"]},{"label":["filename"],"name":[13],"type":["chr"],"align":["left"]},{"label":["email_text.Body"],"name":[14],"type":["fctr"],"align":["left"]}],"data":[{"1":"<15464986.1075855378456.JavaMail.evans@thyme>","2":"Fri, 4 May 2001 13:51:00 -0700 (PDT)","3":"phillip.allen@enron.com","4":"john.lavorato@enron.com","5":"Re:","6":"1.0","7":"7bit","8":"text/plain; charset=us-ascii","9":"","10":"","11":"\\\\Phillip_Allen_Jan2002_1\\\\Allen, Phillip K.\\\\'Sent Mail","12":"Allen-P","13":"pallen (Non-Privileged).pst","14":"Traveling to have a business meeting takes the fun out of the trip.  Especially if you have to prepare a presentation.  I would suggest holding the business plan meetings here then take a trip without any formal business meetings.  I would even try and get some honest opinions on whether a trip is even desired or necessary.\\n\\nAs far as the business meetings, I think it would be more productive to try and stimulate discussions across the different groups about what is working and what is not.  Too often the presenter speaks and the others are quiet just waiting for their turn.   The meetings might be better if held in a round table discussion format.  \\n\\nMy suggestion for where to go is Austin.  Play golf and rent a ski boat and jet ski's.  Flying somewhere takes too much time.\\n","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["Messageid"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Date"],"name":[2],"type":["chr"],"align":["left"]},{"label":["From"],"name":[3],"type":["chr"],"align":["left"]},{"label":["To"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Subject"],"name":[5],"type":["chr"],"align":["left"]},{"label":["Mimeversion"],"name":[6],"type":["chr"],"align":["left"]},{"label":["Contentencoding"],"name":[7],"type":["chr"],"align":["left"]},{"label":["Contenttype"],"name":[8],"type":["chr"],"align":["left"]},{"label":["cc"],"name":[9],"type":["chr"],"align":["left"]},{"label":["bcc"],"name":[10],"type":["chr"],"align":["left"]},{"label":["Folder"],"name":[11],"type":["chr"],"align":["left"]},{"label":["origin"],"name":[12],"type":["chr"],"align":["left"]},{"label":["filename"],"name":[13],"type":["chr"],"align":["left"]},{"label":["email_text.Body"],"name":[14],"type":["fctr"],"align":["left"]}],"data":[{"1":"<18782981.1075855378110.JavaMail.evans@thyme>","2":"Mon, 14 May 2001 16:39:00 -0700 (PDT)","3":"phillip.allen@enron.com","4":"tim.belden@enron.com","5":"","6":"1.0","7":"7bit","8":"text/plain; charset=us-ascii","9":"","10":"","11":"\\\\Phillip_Allen_Jan2002_1\\\\Allen, Phillip K.\\\\'Sent Mail","12":"Allen-P","13":"pallen (Non-Privileged).pst","14":"Here is our forecast\\n\\n"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+<p>But this isn’t very easy to read, so let’s create a new table with information such as date, from, to and message.</p>
+<pre class="r"><code>email_content=data.frame(emails_split$Date,emails_split$From,emails_split$To,emails_split$email_text.Body)
+names(email_content)=c(&quot;Date&quot;,&quot;From&quot;,&quot;To&quot;,&quot;Body&quot;)
+head(email_content)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Date"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["From"],"name":[2],"type":["fctr"],"align":["left"]},{"label":["To"],"name":[3],"type":["fctr"],"align":["left"]},{"label":["Body"],"name":[4],"type":["fctr"],"align":["left"]}],"data":[{"1":"Mon, 14 May 2001 16:39:00 -0700 (PDT)","2":"phillip.allen@enron.com","3":"tim.belden@enron.com","4":"Here is our forecast\\n\\n","_rn_":"1"},{"1":"Fri, 4 May 2001 13:51:00 -0700 (PDT)","2":"phillip.allen@enron.com","3":"john.lavorato@enron.com","4":"Traveling to have a business meeting takes the fun out of the trip.  Especially if you have to prepare a presentation.  I would suggest holding the business plan meetings here then take a trip without any formal business meetings.  I would even try and get some honest opinions on whether a trip is even desired or necessary.\\n\\nAs far as the business meetings, I think it would be more productive to try and stimulate discussions across the different groups about what is working and what is not.  Too often the presenter speaks and the others are quiet just waiting for their turn.   The meetings might be better if held in a round table discussion format.  \\n\\nMy suggestion for where to go is Austin.  Play golf and rent a ski boat and jet ski's.  Flying somewhere takes too much time.\\n","_rn_":"2"},{"1":"Wed, 18 Oct 2000 03:00:00 -0700 (PDT)","2":"phillip.allen@enron.com","3":"leah.arsdall@enron.com","4":"test successful.  way to go!!!","_rn_":"3"},{"1":"Mon, 23 Oct 2000 06:13:00 -0700 (PDT)","2":"phillip.allen@enron.com","3":"randall.gay@enron.com","4":"Randy,\\n\\n Can you send me a schedule of the salary and level of everyone in the \\nscheduling group.  Plus your thoughts on any changes that need to be made.  \\n(Patti S for example)\\n\\nPhillip","_rn_":"4"},{"1":"Thu, 31 Aug 2000 05:07:00 -0700 (PDT)","2":"phillip.allen@enron.com","3":"greg.piper@enron.com","4":"Let's shoot for Tuesday at 11:45.","_rn_":"5"},{"1":"Thu, 31 Aug 2000 04:17:00 -0700 (PDT)","2":"phillip.allen@enron.com","3":"greg.piper@enron.com","4":"Greg,\\n\\n How about either next Tuesday or Thursday?\\n\\nPhillip","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Let’s also tidy up the date timestamps so we do some analysis on these. Firsly, we need to convert the Date column into actual date format in R:</p>
+<pre class="r"><code>str(email_content) #not in date format yet, so need to convert this</code></pre>
+<pre><code>## 'data.frame':    1000 obs. of  4 variables:
+##  $ Date: Factor w/ 650 levels &quot;Fri, 1 Sep 2000 06:08:00 -0700 (PDT)&quot;,..: 134 82 564 175 347 345 429 13 410 140 ...
+##  $ From: Factor w/ 41 levels &quot;1.11913372.-2@multexinvestornetwork.com&quot;,..: 28 28 28 28 28 28 28 28 28 28 ...
+##  $ To  : Factor w/ 233 levels &quot;(undisclosed-recipients)&quot;,..: 219 106 128 183 76 76 47 111 139 233 ...
+##  $ Body: Factor w/ 657 levels &quot;'Arry (calxa@aol.com), Lime Ex-splurt Extraordinaire, wrote:\n\n[snipped]\n\n&gt;I highly recommend David Moore's &quot;| __truncated__,..: 327 638 606 568 464 313 559 209 191 147 ...</code></pre>
+<pre class="r"><code>library(lubridate)</code></pre>
+<pre><code>## 
+## Attaching package: 'lubridate'</code></pre>
+<pre><code>## The following object is masked _by_ '.GlobalEnv':
+## 
+##     origin</code></pre>
+<pre><code>## The following objects are masked from 'package:data.table':
+## 
+##     hour, isoweek, mday, minute, month, quarter, second, wday,
+##     week, yday, year</code></pre>
+<pre><code>## The following object is masked from 'package:base':
+## 
+##     date</code></pre>
+<pre class="r"><code>email_content=email_content%&gt;%
+  mutate(Date_formatted=as.POSIXct(Date,format=&quot;%a, %d %b %Y %H:%M:%S %z&quot;))
+
+attributes(email_content$Date_formatted)$tzone = &quot;America/Los_Angeles&quot;
+
+email_content=email_content%&gt;%
+  mutate(year=year(Date_formatted),
+         month=month(Date_formatted,label=T),mday=mday(Date_formatted),
+         day=wday(Date_formatted,label=T),hour=hour(Date_formatted), 
+         minute=minute(Date_formatted))</code></pre>
+<p>Now we can extract all the individual elements to see things like day, time, month, year etc for doing some aggregations later.</p>
+</div>
+<div id="who-sent-the-most-emails-and-to-whom" class="section level4">
+<h4>Who sent the most emails and to whom?</h4>
+</div>
+<div id="most-common-times-emails-were-sent" class="section level4">
+<h4>Most common times emails were sent</h4>
+</div>
+<div id="topic-modelling" class="section level4">
+<h4>Topic modelling</h4>
+</div>
+<div id="word-cloud-from-emails" class="section level4">
+<h4>Word cloud from emails</h4>
 </div>
 </div>
 
